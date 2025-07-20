@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">My Appointments</h2>
+    
+    {% if appointments %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>{% if is_doctor %}Patient{% else %}Doctor{% endif %}</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appointment in appointments %}
+                    <tr>
+                        <td>
+                            {% if is_doctor %}
+                                {{ appointment.patient.user.get_full_name }}
+                            {% else %}
+                                Dr. {{ appointment.doctor.user.get_full_name }}
+                            {% endif %}
+                        </td>
+                        <td>{{ appointment.date|date:"F j, Y" }}</td>
+                        <td>{{ appointment.time_slot|time:"g:i A" }}</td>
+                        <td>{{ appointment.status }}</td>
+                        <td>
+                            {% if appointment.status != 'Cancelled' %}
+                                {% if appointment.can_cancel %}
+                                    <a href="{% url 'cancel_appointment' appointment.id %}"
+                                       class="btn btn-sm btn-danger"
+                                       onclick="return confirm('Are you sure you want to cancel this appointment?');">
+                                        Cancel
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">Cannot cancel &lt; 24 hrs</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="text-success">Cancelled</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No appointments found.</p>
+    {% endif %}
+</div>
+{% endblock %}

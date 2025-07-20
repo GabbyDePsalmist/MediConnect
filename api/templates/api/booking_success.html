@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Appointment Confirmed{% endblock %}
+
+{% block content %}
+<div class="card shadow p-4 mb-5 bg-white rounded">
+    <h2 class="text-success mb-4">Appointment Confirmed</h2>
+
+    <p class="mb-3">
+        Your appointment with <strong>Dr. {{ appointment.doctor.user.first_name }} {{ appointment.doctor.user.last_name }}</strong>
+        on <strong>{{ appointment.date }}</strong> at <strong>{{ appointment.time_slot }}</strong> has been confirmed and paid.
+    </p>
+
+    <div class="d-flex gap-3">
+        <a href="{% url 'home' %}" class="btn btn-primary">Return to Home</a>
+
+        <!-- Cancel appointment button -->
+        <form action="{% url 'cancel_appointment' appointment.id %}" method="post" onsubmit="return confirm('Are you sure you want to cancel this appointment?');">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger">Cancel Appointment</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

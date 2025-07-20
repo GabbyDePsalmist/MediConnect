@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">📨 Inbox</h2>
+
+    <ul class="list-group shadow-sm">
+        {% for msg in messages %}
+            <li class="list-group-item d-flex align-items-start {% if not msg.is_read %}list-group-item-warning{% endif %}">
+                <img src="{% static 'images/image1.jpg' %}" 
+                     alt="Profile" 
+                     class="rounded-circle me-3" 
+                     style="width: 48px; height: 48px; object-fit: cover;">
+
+                <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong>{{ msg.sender.get_full_name }}</strong>
+                        {% if not msg.is_read %}
+                            <span class="badge bg-primary">Unread</span>
+                        {% endif %}
+                    </div>
+                    <p class="mb-1 text-dark">{{ msg.content }}</p>
+                    <small class="text-muted">{{ msg.created_at|date:"M d, Y H:i" }}</small>
+                </div>
+            </li>
+        {% empty %}
+            <li class="list-group-item text-muted text-center">No messages yet.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
